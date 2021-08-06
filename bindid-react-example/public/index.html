@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BindID Example Login</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- BindID SDK  ** Required! ** -->
+    <!-- Your page can access all the BindID functionality by loading the BindID SDK. Add the code used to load the BindID SDK to your front-end web application, by including the following HTML tags: -->
+    <!-- We only need polyfill to support older browsers. -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2CPromise.prototype.finally%2CTextDecoder%2CTextEncoder%2CObject.entries"></script>
+    <script
+      id="bindid"
+      src="https://signin.bindid-sandbox.io/bindid-sdk/transmit-bind-id-sdk.js"
+      defer
+    ></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
