@@ -4,53 +4,37 @@ Build app-less, passwordless login experiences with BindID for customers that wa
 
 ## Prerequisites
 
-Before you begin, you'll need to have an application configured in the [BindID Admin Portal](https://admin.bindid-sandbox.io/console/#/applications). From the application settings, obtain the client credentials and configure `http://localhost:3000/redirect` as a redirect URI for this client so that you can run the sample app on your local machine. For more, see [BindID Admin Portal: Get Started](https://developer.bindid.io/docs/guides/admin_portal/topics/getStarted/get_started_admin_portal).
+Before you begin, you'll need to have an application configured in the [BindID Admin Portal](https://admin.bindid-sandbox.io/console/#/applications). From the application settings, obtain the client credentials and configure redirect URI for this client so that you can run the sample app on your local machine. For more, see [BindID Admin Portal: Get Started](https://developer.bindid.io/docs/guides/admin_portal/topics/getStarted/get_started_admin_portal).
 
 ## Instructions
 
 To run the sample on your local machine you will need to run 2 applications locally - React(to obtain authorization code) and Customer Server(to exchange authorization code for token):
 
-## Start React App
-
-1 - Navigate to bindid-react-example folder and install all the needed dependencies:
+1 - Configure your client credentials in the `.env` file for server:
 
 ```bash
-npm install
+    BINDID_CLIENT_ID =              # Client ID obtained from the BindID Admin Portal
+    BINDID_CLIENT_SECRET =          # Client secret obtained from the BindID Admin Portal
+    REDIRECT_URI =                  # Client redirect obtained from the BindID Admin Portal
+    PORT = 8080
 ```
 
-2 - Configure your client credentials in the `src/ts/tsservice.js` file:
+2 - Configure your client credentials in the `.env` file for client:
 
 ```bash
-    this.clientId = # Client ID obtained from the BindID Admin Portal
-    this.redirectUri = # Client redirect obtained from the BindID Admin Portal
+    REACT_APP_BINDID_CLIENT_ID =    # Client ID obtained from the BindID Admin Portal
+    REACT_APP_REDIRECT_URI =        # Client redirect obtained from the BindID Admin Portal
+    REACT_APP_HOME_URI =            # Application home URL
+    REACT_APP_PORT = 8080
+    REACT_APP_SERVER_TOKEN_URL =    # Server /token URL
+    REACT_APP_SERVER_VALIDATE_URL = # Server /validate URL
+    REACT_APP_JWKS_URL = "https://signin.bindid-sandbox.io/jwks" # DO NOT MODIFY
 ```
 
-3 - Start React App:
+3 - Navigate to root folder and run following command:
 
 ```bash
-    npm start
-```
-
-## Start Customer Server
-
-1 - Navigate to customer-server folder and install all the needed dependencies:
-
-```bash
-npm install
-```
-
-2 - Configure your client credentials in the `.env` file:
-
-```bash
-    BINDID_CLIENT_ID = # Client ID obtained from the BindID Admin Portal
-    BINDID_CLIENT_SECRET = # Client secret obtained from the BindID Admin Portal
-    REDIRECT_URI = # Client redirect obtained from the BindID Admin Portal
-```
-
-3 - Start server:
-
-```bash
-    npm start
+    npm run install && npm run start
 ```
 
 App:
