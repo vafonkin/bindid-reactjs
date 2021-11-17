@@ -51,6 +51,19 @@ function BindIDRedirect(props) {
           >
             Decoded Token
           </button>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#validateToken"
+            aria-expanded="false"
+            aria-controls="validateToken"
+            onClick={() => {
+              validateTokenDataCardonClick();
+            }}
+          >
+            Validate Token
+          </button>
         </p>
         <div id="userPassport" className="card p-2 shadow collapse show">
           <table className="table table-dark table-hover">
@@ -124,6 +137,7 @@ function BindIDRedirect(props) {
           </table>
         </div>
         <pre id="rawTokenData" className="card p-2 shadow collapse"></pre>
+        <div id="validateToken" className="card p-4 shadow collapse"></div>
         <h5 className="mt-5">
           For more options, like de-registering a device, go to myBindID
         </h5>
@@ -145,10 +159,10 @@ function BindIDRedirect(props) {
     </div>
   );
   function sendAuthCodeToServer(authCode) {
-    const tokenUrl = "http://localhost:8080/token";
+    const nonce = window.localStorage.getItem("XM_BIND_ID_NONCE_KEY") || null;
 
     // Send the authCode to the application server
-    fetch(tokenUrl, {
+    fetch(tsService.tokenUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -156,7 +170,7 @@ function BindIDRedirect(props) {
       body: JSON.stringify({ code: authCode }),
     })
       .then((res) => res.json())
-      .then((body) => {
+      .then(async (body) => {
         // If autorization code is invalid server will report an error, we check first for any error otherwise we will decode JWT:
         if (body.hasOwnProperty("error")) {
           // Display an error message to the user
@@ -167,7 +181,7 @@ function BindIDRedirect(props) {
               body.error_description
           );
           // Redirect to login page
-          window.location.href = "http://localhost:3000";
+          window.location.href = tsService.home;
         } else {
           // JWT decode:
           const tokenData = JSON.parse(
@@ -178,6 +192,28 @@ function BindIDRedirect(props) {
             null,
             4
           );
+
+          // Send the idToken/JWT to the application server and validate
+          const resp = await fetch(tsService.validationUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              idToken: body.id_token,
+              jwksUrl: tsService.jwksUrl,
+              nonce,
+            }),
+          });
+
+          const data = await resp.json();
+          const validationDiv = document.getElementById("validateToken");
+
+          if (!data.ok) {
+            validationDiv.textContent = data.errors;
+            validationDiv.classList.add("text-danger");
+          } else {
+            validationDiv.textContent = data.msg;
+            validationDiv.classList.add("text-success");
+          }
           setPassportTableData(tokenData);
           document
             .getElementById("successCard")
@@ -277,15 +313,28 @@ function BindIDRedirect(props) {
   function userPassportCardonClick() {
     let rawTokenDataCard = document.getElementById("rawTokenData");
     let userPassportCard = document.getElementById("userPassport");
+    let validateTokenDataCard = document.getElementById("validateToken");
     rawTokenDataCard.classList.remove("show");
+    validateTokenDataCard.classList.remove("show");
     userPassportCard.classList.add("show");
   }
 
   function rawTokenDataCardonClick() {
     let userPassportCard = document.getElementById("userPassport");
     let rawTokenDataCard = document.getElementById("rawTokenData");
+    let validateTokenDataCard = document.getElementById("validateToken");
     userPassportCard.classList.remove("show");
+    validateTokenDataCard.classList.remove("show");
     rawTokenDataCard.classList.add("show");
+  }
+
+  function validateTokenDataCardonClick() {
+    let userPassportCard = document.getElementById("userPassport");
+    let rawTokenDataCard = document.getElementById("rawTokenData");
+    let validateTokenDataCard = document.getElementById("validateToken");
+    userPassportCard.classList.remove("show");
+    rawTokenDataCard.classList.remove("show");
+    validateTokenDataCard.classList.add("show");
   }
 }
 
