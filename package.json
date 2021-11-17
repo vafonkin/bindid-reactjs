@@ -1,0 +1,19 @@
+{
+  "name": "bindid-react-example-bundle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm install --prefix customer-server & npm install --prefix bindid-react-example",
+    "start": "npm start --prefix customer-server & npm start --prefix bindid-react-example"
+  },
+  "keywords": [
+    "BindID"
+  ],
+  "author": "Transmit Security",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "dev": ""
+}
